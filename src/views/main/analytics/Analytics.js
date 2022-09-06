@@ -15,19 +15,29 @@ const AnalyticsContainerStyle = {
 
 
 const Analytics = () => {
-	const [groups, setGroups] = useState(null);
-	useEffect(() => {
+	const [groups, setGroups] = useState([]);
+	// const [participants, setParticipants] = useState([]);
+	// const [groupInfo, setGroupInfo] = useState([])
+	useEffect(async () => {
 		// 6308ccffb4dbd48f6c270686
 		// https://api-dev.kwikpic.in/api/app/group/my-groups-v2
 		// https://api-dev.kwikpic.in/api/app/analytics/groupAnalytics/630c7195b8972cf4ca34ea5b
-		AXIOS.get('https://api-dev.kwikpic.in/api/app/group/my-groups-v2')
-			.then((res) => setGroups(res.data))
+		await AXIOS.get('https://api-dev.kwikpic.in/api/app/group/my-groups-v2')
+			.then((res) => {
+				setGroups(res.data.data.myGroups)
+			})
 			.catch((err) => console.error(err))
-
-	}, [])
-
-	console.log(groups)
-
+			
+		}, [])
+		console.log(groups)
+		useEffect(async () => {
+			await AXIOS.get('https://api-dev.kwikpic.in/api/app/analytics/groupAnalytics/62d7ee564632b7e0044876d3')
+			.then((res) => {
+				console.log(res.data)
+			})
+			.catch((err) => console.error(err))
+		}, [])
+		// console.log(participants)
 	return (
 		<Container>
 			<Row>
@@ -35,27 +45,12 @@ const Analytics = () => {
 					<Container>
 						<h1>Analytics</h1>
 						<Nav fill style={{ display: 'flex', flexDirection: 'Column' }} variant="tabs" defaultActiveKey="/home">
-							<Nav.Item>
-								<Nav.Link href="/home">Event Name - 1234</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="link-1">Event Name - 1234</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="link-2">Event Name - 1234</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="link-3">Event Name - 1234</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="link-4">Event Name - 1234</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="link-5">Event Name - 1234</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="link-6">Event Name - 1234</Nav.Link>
-							</Nav.Item>
+							{groups.map((content) => (
+									<Nav.Item key={content.count}>
+										<Nav.Link href={content.group._id}>{content.group.name}</Nav.Link>
+									</Nav.Item>
+								)
+							)}
 						</Nav>
 					</Container>
 				</Col>

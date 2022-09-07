@@ -9,6 +9,7 @@ import MainRoute from "./views/routes/MainRoute";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./views/main/home/Home";
 import Analytics from "views/main/analytics/Analytics";
+import GroupTable from "views/main/analytics/components/groupTable";
 import OtpScreen from "./views/auth/photographer/OtpScreen";
 import SelectUser from "./views/auth/photographer/SelectUser";
 import Register from "./views/auth/photographer/Register";
@@ -54,7 +55,12 @@ const App = () => {
 
           <Route path="/" name="home" element={<MainRoute />}>
             <Route index element={<Home />} />
-            <Route path="/analytics"  element={<Analytics />} />
+          </Route>
+            
+          <Route path="/" name="analytics" element={<MainRoute />}>
+            <Route path="/analytics" element={<Analytics />}>
+              <Route path=":groupId" element={<GroupTable />}/>
+            </Route>
           </Route>
 
           {/* 404 route */}
